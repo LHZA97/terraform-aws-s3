@@ -7,11 +7,11 @@ resource "aws_s3_bucket" "s3_bucket_resource" {
       tags                          = var.tags
 }
 
-resource "aws_s3_bucket_logging" "s3_bucket_logging_resource" {
-      bucket                        = aws_s3_bucket.s3_bucket_resource.id
-      target_bucket                 = var.target_bucket
-      target_prefix                 = var.target_prefix
-}
+# resource "aws_s3_bucket_logging" "s3_bucket_logging_resource" {
+#       bucket                        = aws_s3_bucket.s3_bucket_resource.id
+#       target_bucket                 = var.target_bucket
+#       target_prefix                 = var.target_prefix
+# }
 
 resource "aws_s3_bucket_versioning" "s3_bucket_versioning_resource" {
       bucket                        = aws_s3_bucket.s3_bucket_resource.id
