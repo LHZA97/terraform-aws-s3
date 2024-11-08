@@ -23,10 +23,10 @@ output "bucket_versioning_status" {
   value       = aws_s3_bucket_versioning.s3_bucket_versioning_resource.versioning_configuration[0].status
 }
 
-output "bucket_logging_target" {
-  description = "The target bucket for logging, if logging is enabled"
-  value       = aws_s3_bucket_logging.s3_bucket_logging_resource.target_bucket
-}
+# output "bucket_logging_target" {
+#   description = "The target bucket for logging, if logging is enabled"
+#   value       = aws_s3_bucket_logging.s3_bucket_logging_resource.target_bucket
+# }
 
 output "bucket_tags" {
   description = "Tags applied to the S3 bucket"
