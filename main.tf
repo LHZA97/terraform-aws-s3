@@ -42,21 +42,48 @@ resource "aws_s3_bucket_public_access_block" "s3_block_public_access_resource" {
       restrict_public_buckets       = var.restrict_public_buckets
 }
 
-resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = aws_s3_bucket.s3_bucket_resource.id
 
+resource "aws_s3_bucket_policy" "s3_bucket_policy" {
+  bucket = aws_s3_bucket.s3_bucket_resource.id
   policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+    Version   = "2012-10-17"
+    Statement = flatten([
       {
-        Effect = "Allow"
+        Sid       = "AllowSSLRequestsOnly"
+        Effect    = "Deny"
         Principal = "*"
-        Action = "s3:GetObject"
-        Resource = "${aws_s3_bucket.s3_bucket_resource.arn}/*"
-      }
-    ]
+        Action    = "s3:*"
+        Resource  = [
+          "arn:aws:s3:::${aws_s3_bucket.s3_bucket_resource.id}",
+          "arn:aws:s3:::${aws_s3_bucket.s3_bucket_resource.id}/*"
+        ]
+        Condition = {
+          Bool = {
+            "aws:SecureTransport" = "false"
+          }
+        }
+      },
+      var.additional_statements
+    ])
   })
 }
+
+
+# resource "aws_s3_bucket_policy" "bucket_policy" {
+#   bucket = aws_s3_bucket.s3_bucket_resource.id
+
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Effect = "Allow"
+#         Principal = "*"
+#         Action = "s3:GetObject"
+#         Resource = "${aws_s3_bucket.s3_bucket_resource.arn}/*"
+#       }
+#     ]
+#   })
+# }
 
 resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_configuration_resource" {
   bucket = aws_s3_bucket.s3_bucket_resource.id

@@ -171,6 +171,24 @@ variable "restrict_public_buckets" {
 
 
 ###############################################################
+#                 S3 Bucket Access Policy                     #
+###############################################################
+
+
+variable "additional_statements" {
+  description = "List of additional statements to add to the bucket policy"
+  type        = list(object({
+    Sid       = string
+    Effect    = string
+    Principal = string
+    Action    = string
+    Resource  = list(string)
+    Condition = map(any)
+  }))
+  default     = []
+}
+
+###############################################################
 #                S3 Bucket LifecyclePolicy                    #
 ###############################################################
 
