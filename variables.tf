@@ -100,11 +100,11 @@ variable "kms_master_key_id" {
 
 
 variable "versioning_enabled" {
-    type = bool
+    type = string
     description = "Enable versioning for the S3 bucket"
-    default = true
+    default = "Enabled"
     validation {
-        condition = contains([true, false], var.versioning_enabled)
+        condition = contains(["Enabled", "Suspended", "Disabled"], var.versioning_enabled)
         error_message = "Invalid input, options: \"true\", \"false\"."
     }
 }
@@ -115,11 +115,11 @@ variable "versioning_enabled" {
 
 
 variable "acceleration_enabled" {
-    type = bool
+    type = string
     description = "Enable S3 bucket acceleration"
-    default = false
+    default = "Suspended"
     validation {
-        condition = contains([true, false], var.acceleration_enabled)
+        condition = contains(["Enabled", "Suspended"], var.acceleration_enabled)
         error_message = "Invalid input, options: \"true\", \"false\"."
         }
 }
@@ -183,6 +183,7 @@ variable "lifecycle_rules" {
       prefix = optional(string)
       tags   = optional(map(string))
     }))
+    expiration = object({days  = number})
     noncurrent_version_transitions    = list(object({
       days          = number
       storage_class = string
@@ -190,8 +191,8 @@ variable "lifecycle_rules" {
     noncurrent_version_expiration      = object({
       days = number
     })
-    abort_incomplete_multipart_upload  = object({
+    abort_incomplete_multipart_upload  = optional(object({
       days_after_initiation = number
-    })
+    }))
   }))
 }
